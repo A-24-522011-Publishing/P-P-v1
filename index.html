@@ -48,12 +48,12 @@ const firebaseConfig = {
     });
 
 
-    function FindData(event) {
+function FindData(event) {
   event.preventDefault(); // Prevent default form submission behavior
   
   const dbref = ref(db);
   const projectId = logincode.value;
-  console.log(`login Code: ${logincode.value}`);
+  console.log(`login Code: ${projectId}`);
   const enteredAuthCode = authCode.value;
   
   get(child(dbref, `Projects/${projectId}`))
@@ -65,14 +65,14 @@ const firebaseConfig = {
         
         if (enteredAuthCode === correctAuthCode) {
           console.log("Correct authentication code!"); // Log success message
-          const filePath = `file:///C:/Coding/Website/${data.Projekt_ID}.html`; // Local file path
-          window.location.href = filePath; // Redirect to the specified local file
+          const redirectUrl = `https://md1125.dev/projects/${projectId}`; // New redirect URL
+          window.location.href = redirectUrl; // Redirect to the specified URL
         } else {
           alert("Wrong Authentication Code");
         }
       } else {
-        const filePath = `md1125.dev/404`; // Local file path
-          window.location.href = filePath; // Redirect to the specified local file
+        const redirectUrl = 'https://md1125.dev/404'; // 404 page URL
+        window.location.href = redirectUrl; // Redirect to the 404 page
       }
     })
     .catch((error) => {
@@ -80,6 +80,7 @@ const firebaseConfig = {
       alert(error.message); // Show an alert with the error message
     });
 }
+
 
 
   </script>
