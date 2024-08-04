@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Project | MD1125</title>
+  <link rel="stylesheet" href="Projects_Page.css">
+</head>
+<body>
+  <div class="wrapper">
+    <form id="login Form">
+      <h2>Access Files / Projects</h2>
+      <div class="input-field">
+        <input type="text" id="logincode" required>
+        <label>Project ID</label>
+      </div>
+      <div class="input-field">
+        <input type="password" id="authCode" required>
+        <label>Project authorization Code</label>
+      </div>
+
+      <button type="submit" id="find">Access</button>
+    </form>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import { getDatabase, ref, get, set, update, remove, child } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+
+    const firebaseConfig = {
+    apiKey: "AIzaSyBfzFYPTmgE_nuB55-znKg5mU-H431P9ME",
+    authDomain: "md1125v3.firebaseapp.com",
+    databaseURL: "https://md1125v3-default-rtdb.firebaseio.com",
+    projectId: "md1125v3",
+    storageBucket: "md1125v3.appspot.com",
+    messagingSenderId: "296463885610",
+    appId: "1:296463885610:web:e2068e21e0cc6dba96ea53",
+    measurementId: "G-WTMLCZ5G0W"
+  };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const findBtn = document.querySelector('#find');
+
+      findBtn.addEventListener('click', FindData);
+    });
+
+
+    function FindData(event) {
+  event.preventDefault(); // Prevent default form submission behavior
+  
+  const dbref = ref(db);
+  const projectId = logincode.value;
+  console.log(`login Code: ${logincode.value}`);
+  const enteredAuthCode = authCode.value;
+  
+  get(child(dbref, `Projects/${projectId}`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const correctAuthCode = data.Projekt_Auth_Code; // Assuming auth code is stored in your data object
+        console.log(`Correct Auth Code: ${correctAuthCode}`);
+        
+        if (enteredAuthCode === correctAuthCode) {
+          console.log("Correct authentication code!"); // Log success message
+          const filePath = `file:///C:/Coding/Website/${data.Projekt_ID}.html`; // Local file path
+          window.location.href = filePath; // Redirect to the specified local file
+        } else {
+          alert("Wrong Authentication Code");
+        }
+      } else {
+        const filePath = `file:///C:/Coding/Website/404_Not_Found.html?#`; // Local file path
+          window.location.href = filePath; // Redirect to the specified local file
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error); // Log error message
+      alert(error.message); // Show an alert with the error message
+    });
+}
+
+
+  </script>
+</body>
+</html>
